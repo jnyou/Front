@@ -71,7 +71,7 @@
 
       <el-table-column label="操作" width="200" align="center">
         <template slot-scope="scope">
-          <router-link :to="'/edu/teacher/edit/'+scope.row.id">
+          <router-link :to="'/teacher/edit/'+scope.row.id">
             <el-button type="primary" size="mini" icon="el-icon-edit">修改</el-button>
           </router-link>
           <el-button type="danger" size="mini" icon="el-icon-delete" @click="removeDataById(scope.row.id)">删除</el-button>
@@ -104,7 +104,7 @@ export default {
             list: null, // 查询出来的结果集    默认值为null
             total: 0,   // 查询出来的总记录数  默认值为0
             page: 1,    // 参数页
-            limit: 5,  // 参数记录数
+            limit: 10,  // 参数记录数
             teacherQuery: {} // 参数条件对象
         }
     },
@@ -145,8 +145,8 @@ export default {
                         type: 'success',
                         message: '删除成功!'
                     })
+                  this.getList()
                 })
-                this.getList()
                 
             }) // 点击取消和失败调用catch方法
         }
