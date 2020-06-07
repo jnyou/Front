@@ -59,7 +59,7 @@
 
         <!-- 课程简介 -->
         <el-form-item label="课程简介">
-            <el-input v-model="courseInfo.description" placeholder=""/>
+            <tinymce :height="300" v-model="courseInfo.description"/>
         </el-form-item>
 
         <!-- 课程封面-->
@@ -91,11 +91,14 @@
 import courseApi from '@/api/edu/course'
 // 引入subject.js
 import subjectApi from '@/api/edu/subject'
+// 引入富文本编辑器组件
+import Tinymce from '@/components/Tinymce'
 
 const defaultForm = {
   title: '',
-  subjectId: '',
-  teacherId: '',
+  subjectParentId: '',  // 一级分类ID
+  subjectId: '',        // 二级分类ID
+  teacherId: '', 
   lessonNum: 0,
   description: '',
   cover: 'https://jnyou.oss-cn-beijing.aliyuncs.com/2020/06/07/d2225022a3a04ae8950a19c68c5d703bmybatis.jpg',
@@ -103,6 +106,7 @@ const defaultForm = {
 }
 
 export default {
+    components: { Tinymce }, // 声明组件
     data(){
         return{
             courseInfo: defaultForm, // 默认信息
@@ -177,3 +181,9 @@ export default {
     }
 }
 </script>
+<!--富文本样式-->
+<style scoped>
+.tinymce-container {
+  line-height: 29px;
+}
+</style>
