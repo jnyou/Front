@@ -64,6 +64,8 @@ export default {
                 type: 'success',
                 message: response.message
             })
+            // 路由跳转到列表页面
+            this.$router.push({ path: '/subject/list' })
         },
         fileUploadError(response) {
             this.fileUploadBtnText = response.message
