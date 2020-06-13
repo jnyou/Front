@@ -114,16 +114,80 @@ export default {
             teacherList: [],         // 所有的讲师
             oneSubjectCategory: [],  // 一级分类
             twoSubjectCategory: [],  // 二级分类
-            BASE_API: process.env.BASE_API // OSS接口API地址
+            BASE_API: process.env.BASE_API, // OSS接口API地址
+            courseId:''
         }
     },
     created(){
-        this.getTeacherList()
-        this.getOneSubjectCategory()
+        this.init()
+    },
+    // 监听路由
+    watch:{
+      $route(to,from){ // 路由变化方式，路由发生改变，方法就会执行
+        console.log('watch $route')
+        this.init()
+      }
     },
     methods:{
+        init(){
+            if(this.$route.params && this.$route.params.id){
+                // 获取路由中的课程ID
+                this.courseId = this.$route.params.id
+                // 调用查询接口
+                this.getCourseInfoByCourseId()
+            } else {
+                this.getTeacherList()
+                this.getOneSubjectCategory()
+                // 初始化
+                this.courseInfo = defaultForm
+            }
+        },
+        // 根据课程ID查询课程信息
+        getCourseInfoByCourseId(){
+            courseApi.getCourseInfoByCourseId(this.courseId)
+            .then(res => {
+                this.courseInfo = res.data.courseInfo
+                // 查询所有的分类，包含一级和二级分类ID
+                subjectApi.getSujectList()
+                .then(res => {
+                    this.oneSubjectCategory = res.data.list
+
+                    for(let i = 0; i < this.oneSubjectCategory.length; i++){
+                        // 获取每一个一级分类
+                        let oneCategory = this.oneSubjectCategory[i]
+                        if(this.courseInfo.subjectParentId == oneCategory.id){
+                            this.twoSubjectCategory = oneCategory.children
+                        }
+                    }
+                })
+                this.getTeacherList()
+            })
+        },
         // 保存并下一步方法
         saveOrUpdata(){
+            if(!this.courseInfo.id){
+                // 没ID添加
+                this.addCourseInfo()
+            } else{
+                this.updateCourseInfo()
+            }
+        },
+        // 新增课程信息
+        addCourseInfo(){
+            if(this.courseInfo.subjectParentId == ''){
+                this.$message({
+                    type: 'error',
+                    message: "一级课程分类不能为空"
+                })
+                return
+            }
+            if(this.courseInfo.title == ''){
+                this.$message({
+                    type: 'error',
+                    message: "课程名称不能为空"
+                })
+                return
+            }
             courseApi.addCourseInfo(this.courseInfo)
             .then(response => {
                 this.$message({
@@ -132,6 +196,18 @@ export default {
                 })
                 // 跳转到第二步
                 this.$router.push({ path: `/course/chapter/${response.data.courseId}`})
+            })
+        },
+        // 修改课程信息
+        updateCourseInfo(){
+            courseApi.updateCourseInfo(this.courseInfo)
+            .then(response => {
+                this.$message({
+                    type: 'success',
+                    message: response.message
+                })
+                // 跳转到第二步
+                this.$router.push({ path: `/course/chapter/${this.courseId}`})
             })
         },
         // 查询所有的讲师
