@@ -26,10 +26,17 @@ export default {
       data: video
     })
   },
-
+  // 删除小节
   removeById(videoId) {
     return request({
       url: `${api_name}/deleteVideoInfoById/${videoId}`,
+      method: 'DELETE'
+    })
+  },
+  // 删除阿里云视频
+  removeVideoAliyun(videoSourceId){
+    return request({
+      url: `/eduvod/video/deleteVideoAliyun/${videoSourceId}`,
       method: 'DELETE'
     })
   }

@@ -82,9 +82,28 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="上传视频">
-          <!-- TODO -->
-        </el-form-item>
-      </el-form>
+          <el-upload
+                :on-success="handleVodUploadSuccess"
+                :on-remove="handleVodRemove"
+                :before-remove="beforeVodRemove"
+                :on-exceed="handleUploadExceed"
+                :file-list="fileList"
+                :action="BASE_API+'/eduvod/video/uploadVideoAliyun'"
+                :limit="1"
+                name="file"
+                class="upload-demo">
+          <el-button size="small" type="primary">上传视频</el-button>
+          <el-tooltip placement="right-end">
+              <div slot="content">最大支持1G，<br>
+                  支持3GP、ASF、AVI、DAT、DV、FLV、F4V、<br>
+                  GIF、M2T、M4V、MJ2、MJPEG、MKV、MOV、MP4、<br>
+                  MPE、MPG、MPEG、MTS、OGG、QT、RM、RMVB、<br>
+                  SWF、TS、VOB、WMV、WEBM 等视频格式上传</div>
+              <i class="el-icon-question"/>
+          </el-tooltip>
+          </el-upload>
+      </el-form-item>
+    </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogVideoFormVisible = false">取 消</el-button>
         <el-button :disabled="saveVideoBtnDisabled" type="primary" @click="saveOrUpdateVideo">确 定</el-button>
@@ -106,7 +125,8 @@ const defaultVideoForm = {
   title: '',
   sort: 0,
   isFree: 0,
-  videoSourceId: ''
+  videoSourceId: '', // 云端视频ID
+  videoOriginalName:'' //原始文件名称
 }
 
 export default {
@@ -121,6 +141,8 @@ export default {
             saveVideoBtnDisabled: false, //小节防止重复提交
             dialogVideoFormVisible:false, // 小节弹框
             video: defaultVideoForm, // 小节数据
+            fileList: [],//上传文件列表
+            BASE_API: process.env.BASE_API // 接口API地址
         }
     },
     created(){
@@ -133,12 +155,13 @@ export default {
     },
     methods:{
 
-// =====================================章节操作====================================================   
+// =====================================小节操作====================================================   
         // 添加小节弹框
         openAddVideo(chapterId){
           this.dialogVideoFormVisible = true
           // 初始化
-          this.video = defaultVideoForm
+          this.video = {}
+          this.fileList = []
           // 添加章节ID
           this.video.chapterId = chapterId
 
@@ -175,6 +198,7 @@ export default {
             this.dialogVideoFormVisible = true
             // 数据回显
             this.video = res.data.video
+            this.fileList = [{'name': this.video.videoOriginalName}]
           })
         },
         // 修改
@@ -212,7 +236,37 @@ export default {
             }) // 点击取消和失败调用catch方法
 
         },
-
+        // 上传成功的回调方法
+        handleVodUploadSuccess(response, file, fileList){
+          // 视频ID
+          this.video.videoSourceId = response.data.videoId
+          // 视频原始名称
+          this.video.videoOriginalName = file.name
+        },
+        //视图上传多于一个视频
+        handleUploadExceed(files, fileList) {
+          this.$message.warning('想要重新上传视频，请先删除已上传的视频')
+        },
+        // 点击X删除视频弹出提示信息方法
+        beforeVodRemove(file, fileList){
+          return this.$confirm(`确定移除 ${file.name}？`)
+        },
+        // 点击确定按钮删除云端视频
+        handleVodRemove(file, fileList){
+          videoApi.removeVideoAliyun(this.video.videoSourceId)
+          .then(res => {
+            // 提示
+            this.$message({
+                type: 'success',
+                message: res.message
+            })
+            // 把文件列表清空
+            this.fileList = []
+            // 清空
+            this.video.videoSourceId = ''
+            this.video.videoOriginalName = ''
+          })
+        },
 // =====================================章节操作====================================================      
         // 弹框
         openDialogChapter(){
