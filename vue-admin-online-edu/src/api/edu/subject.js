@@ -1,6 +1,6 @@
 import request from '@/utils/request' // 引入axios，此处封装了axios的请求和响应的结果信息
 
-// 讲师列表（条件分页查询）
+// 查询一级二级分类的树
 export default {
     getSujectList(){
         return request({

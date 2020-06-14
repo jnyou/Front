@@ -61,6 +61,27 @@ export default {
             method: 'POST'
         })
     },
+    // 分页条件查询课程列表
+    pageCondition(page,limit,searchObj){
+        return request({
+            // 请求地址
+            // 拼接参数  两种方式  1、 url: '/table/list'+ current + "/" + limit  
+            // 2、↓   使用飘的符号来处理字符串
+            url: `/eduservice/course/pageCondition/${page}/${limit}`, 
+            method: 'GET',
+            params: searchObj
+        })
+    },
+    // 删除课程相关的所有信息
+    removeById(courseId){
+        return request({
+            // 请求地址
+            // 拼接参数  两种方式  1、 url: '/table/list'+ current + "/" + limit  
+            // 2、↓   使用飘的符号来处理字符串
+            url: `/eduservice/course/deleteCourse/${courseId}`, 
+            method: 'DELETE'
+        })
+    },
     
 }
   
