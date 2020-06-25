@@ -1,4 +1,12 @@
 module.exports = {
+  // 应用轮播图的插件
+  plugins: [
+    { src: '~/plugins/nuxt-swiper-plugin.js', ssr: false }
+  ],
+
+  css: [
+    'swiper/dist/css/swiper.css'
+  ],
   /*
   ** Headers of the page
   */
