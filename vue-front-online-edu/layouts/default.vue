@@ -153,10 +153,31 @@ export default {
   },
 
   created() {
+    // 获取微信扫码登陆后跳转到主页路径中的token值 http://localhost:3000/?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvbmxpbmUtdXNlciIsImlhdCI6MTU5MzkyMTM2OSwiZXhwIjoxNTk0MDA3NzY5LCJpZCI6IjEyNzk2MjUwODY2MTcyNTU5MzgiLCJuaWNrbmFtZSI6IuWQllx1RDgzRFx1REUxOCDlsI_liZEifQ.maLOIekNRMbQqV2upT5Srup-xx5DfxvhHSfw_Rltxm0
+    this.token = this.$route.query.token
+    console.log(this.token);
+    
+    // 判断路径中是否有token
+    if(this.token){
+      // 微信登陆显示用户信息的方法
+      this.wxLogin();
+    }
+    // 普通登陆显示用户信息
     this.showInfo()
   },
 
   methods: {
+    // 微信登陆显示用户信息的方法
+    wxLogin(){
+      // 将获取到的token值放入cookie中
+      cookie.set('online_token',this.token,{ domain: 'localhost' });
+      // 根据token调用接口获取用户信息
+      userApi.getLoginInfo().then(res => {
+        this.loginInfo = res.data.data.item
+        //将用户信息记录cookie
+        cookie.set('online_ucenter', this.loginInfo, { domain: 'localhost' })
+      })
+    },
     // 获取用户信息
     showInfo() {
       //debugger
