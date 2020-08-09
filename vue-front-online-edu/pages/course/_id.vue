@@ -12,7 +12,7 @@
       <div>
         <article class="c-v-pic-wrap" style="height: 357px;">
           <section class="p-h-video-box" id="videoPlay">
-            <img :src="course.cover" :alt="course.title" class="dis c-v-pic">
+            <img height="357px" :src="course.cover" :alt="course.title" class="dis c-v-pic">
           </section>
         </article>
         <aside class="c-attr-wrap">
@@ -39,7 +39,7 @@
           </section>
         </aside>
         <aside class="thr-attr-box">
-          <ol class="thr-attr-ol clearfix">
+          <ol class="thr-attr-ol">
             <li>
               <p>&nbsp;</p>
               <aside>
