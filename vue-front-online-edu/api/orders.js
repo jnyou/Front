@@ -15,16 +15,16 @@ export default {
     })
   },
   //3、生成微信支付二维码
-  createNative(cid) {
+  createNative(orderNo) {
     return request({
-      url: '/orderservice/log/createNative/' + cid,
+      url: '/orderservice/log/createNative/' + orderNo,
       method: 'get'
     })
   },
   //4、根据id获取订单支付状态
-  queryPayStatus(cid) {
+  queryPayStatus(orderNo) {
     return request({
-      url: '/orderservice/log/queryPayStatus/' + cid,
+      url: '/orderservice/log/queryPayStatus/' + orderNo,
       method: 'get'
     })
   }
