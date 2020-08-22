@@ -33,7 +33,10 @@
                 <a class="c-fff vam" title="收藏" href="#">收藏</a>
               </span>
             </section>
-            <section class="c-attr-mt">
+            <section class="c-attr-mt" v-if="isbuyCourse || Number(course.price) === 0">
+              <a href="#" title="立即观看" class="comm-btn c-btn-3">立即观看</a>
+            </section>
+            <section class="c-attr-mt" v-else>
               <a @click="createOrders()" href="#" title="立即购买" class="comm-btn c-btn-3">立即购买</a>
             </section>
           </section>
@@ -276,9 +279,9 @@ export default {
     return courseApi.getById(params.id).then((response) => {
       console.log(response);
       return {
-        course: response.data.data.course,
-        chapterList: response.data.data.chapterVoList,
-        courseId: params.id,
+        // course: response.data.data.course,
+        // chapterList: response.data.data.chapterVoList,
+        courseId: params.id
       };
     });
   },
@@ -292,8 +295,8 @@ export default {
         content: "",
         courseId: this.courseId,
       },
-      courseInfo: {},
-      chapterVideoList: [],
+      course: {},
+      chapterList: [],
       isbuyCourse: false,
     };
   },
@@ -305,8 +308,8 @@ export default {
     //获取课程详情
     initCourseInfo() {
       courseApi.getById(this.courseId).then((response) => {
-        this.courseInfo = response.data.data.course;
-        this.chapterVideoList = response.data.data.chapterVoList;
+        this.course = response.data.data.course;
+        this.chapterList = response.data.data.chapterVoList;
         this.isbuyCourse = response.data.data.isbuyCourse;
       });
     },
