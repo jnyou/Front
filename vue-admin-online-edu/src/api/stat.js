@@ -9,5 +9,12 @@ export default {
             url: `${api_name}/${date}`,
             method: 'GET'
         })
+    },
+    // 获取统计数据
+    showChart(searchObj) {
+        return request({
+            url: `${api_name}/show-chart/${searchObj.begin}/${searchObj.end}/${searchObj.type}`,
+            method: 'GET'
+        })
     }
 }
