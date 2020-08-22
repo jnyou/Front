@@ -61,7 +61,7 @@ export const constantRouterMap = [
         name: 'editTeacher',
         component: () => import('@/views/edu/teacher/save'),
         meta: { title: '编辑讲师', icon: 'tree' },
-        hidden:true
+        hidden: true
       }
     ]
   },
@@ -127,6 +127,28 @@ export const constantRouterMap = [
         component: () => import('@/views/edu/course/publish'),
         meta: { title: '发布课程', noCache: true },
         hidden: true
+      }
+    ]
+  },
+
+  {
+    path: '/stat',
+    component: Layout,
+    redirect: '/stat/create',
+    name: 'Statistics',
+    meta: { title: '统计分析', icon: 'chart' },
+    children: [
+      {
+        path: 'create',
+        name: '生成数据',
+        component: () => import('@/views/stat/create'),
+        meta: { title: '生成数据' }
+      },
+      {
+        path: 'show',
+        name: '图标显示',
+        component: () => import('@/views/stat/show'),
+        meta: { title: '图标显示' }
       }
     ]
   },
